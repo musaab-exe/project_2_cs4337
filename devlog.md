@@ -29,3 +29,17 @@ The problem is my pick_employees only picks exactly Min employees using append. 
 Committing what I have.
 
 ---
+## 2026-05-08 8:30 PM
+
+New session. Goals for tonight:
+- Filter out idle workstations before building schedule
+- Add avoid_shift filtering so employees don't get scheduled for shifts they can't work
+- Add avoid_workstation checking
+
+Thoughts since last time: I think the idle filtering is easy, just skip workstations where workstation_idle matches. For avoid_shift I can filter the employee list before assigning a shift. avoid_workstation is trickier since I need to check it during assignment.
+
+Added filter_idle/3 to remove idle workstations with a cut. Added filter_shift_avoids/3 to remove employees who can't work a shift. Same recursive pattern. For avoid_workstation I added check_avoids/2 that runs AFTER picking employees. This is dumb because if it picks ophelia for workstation 1 or 3 it just fails the whole assignment instead of trying different people. But whatever it partially works.
+
+Still have the problem where pick_employees only picks Min employees. And the avoid_workstation check is in the wrong place. Committing anyway.
+
+---
