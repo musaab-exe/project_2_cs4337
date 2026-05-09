@@ -1,4 +1,5 @@
 # Dev Log - CS4337 Project 2
+Musaab J Mohammed
 
 ---
 
@@ -43,3 +44,23 @@ Added filter_idle/3 to remove idle workstations with a cut. Added filter_shift_a
 Still have the problem where pick_employees only picks Min employees. And the avoid_workstation check is in the wrong place. Committing anyway.
 
 ---
+
+## 2026-05-08 11:30 PM
+
+Last session. Goals:
+- Rewrite employee picking to use select/3 and between/3 so it actually explores different combinations
+- Track used employees across shifts properly
+- Add feasibility check so impossible inputs fail fast instead of searching forever
+- Test both examples
+
+Ok I basically rewrote everything. New approach: get active workstations per shift (filter idle), get available employees per shift (filter shift avoids), then assign morning first using select/3 to pick employees one at a time. between(Min, Max, N) tries different counts. avoid_workstation check happens inside pick_n so bad picks backtrack immediately instead of failing after the fact. Subtract used employees before assigning evening, then night.
+
+Added a feasibility check at the top of plan/1 that sums all minimums across all shifts and checks total employees is enough. Example 2 has 6 workstations needing 12+ per shift but only 20 employees so it fails instantly now instead of spinning forever. Also added remaining_min pruning inside assign_shift.
+
+Tested example 1: plan(Plan) generates valid schedules. no_work returns false, double_work returns false, ophelia avoids ws 1 and 3 correctly, daniel doesn't work night, no morning ws 3. All checks from example-output-1 pass. Tested example 2: returns false immediately. Multiple solutions generate through backtracking.
+
+The code is kind of brute force but it works. Prolog handles the backtracking so its fine for these input sizes.
+
+also made a README.md
+
+Ready to submit.
